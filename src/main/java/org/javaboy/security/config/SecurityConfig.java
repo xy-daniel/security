@@ -26,7 +26,8 @@ import java.util.Map;
 /**
  * Spring Security配置
  */
-@Configuration
+
+//@Configuration  //注释掉演示多个httpSecurity的配置
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
