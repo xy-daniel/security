@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -120,6 +121,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .failureForwardUrl("")
                 //处理登录请求的地址直接允许通过
                 .permitAll()
+                .and()
+                //登录注销
+                .logout()
+                //登录注销的请求地址
+                .logoutUrl("/logout")
+                //前后端分离项目中使用
+                .logoutSuccessHandler(new LogoutSuccessHandler() {
+                    @Override
+                    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+                        //authentication登录用户的信息
+                        response.setContentType("application/json;charset=utf-8");
+                        PrintWriter out = response.getWriter();
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("status", 200);
+                        //用户身份牌对象
+                        map.put("msg", "注销登录成功");
+                        out.write(new ObjectMapper().writeValueAsString(map));
+                        out.flush();
+                        out.close();
+                    }
+                })
+                //注销成功后做页面跳转
+//                .logoutSuccessUrl("")
                 .and()
                 //使用postman测试关闭csrf攻击
                 .csrf().disable();
