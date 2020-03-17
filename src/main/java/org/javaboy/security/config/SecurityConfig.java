@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -26,16 +27,23 @@ import java.util.Map;
 /**
  * Spring Security配置
  */
-
-//@Configuration  //注释掉演示多个httpSecurity的配置
+@Configuration  //注释掉演示多个httpSecurity的配置
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+//    /**
+//     * 告知系统现在密码不用加密
+//     */
+//    @Bean
+//    PasswordEncoder passwordEncoder(){
+//        return NoOpPasswordEncoder.getInstance();
+//    }
+
     /**
-     * 告知系统现在密码不用加密
+     * BC加密算法
      */
     @Bean
     PasswordEncoder passwordEncoder(){
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 
     /**
@@ -44,9 +52,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
-            .withUser("javaboy").password("1").roles("admin")
+            .withUser("javaboy").password("$2a$10$MNr4geFktw/Vq49JyBm9QO7GH2hQ0i0i7yPtCfdB0vpSK3ykD4Krm").roles("admin")
             .and()
-            .withUser("ddg").password("1").roles("user");
+            .withUser("ddg").password("$2a$10$SFKbDfUgIYKiFvueJTBdq.Q5yOCn4M0Nz0apohzSEyWzQm4dVEH/.").roles("user");
     }
 
     /**
